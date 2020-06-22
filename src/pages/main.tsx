@@ -1,18 +1,16 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Save from '../components/Save';
 
-const App: React.FC = () => {
+const Main: React.FC = () => {
   useEffect(() => {
     console.log(window.location.href);
   }, []);
   return (
     <div>
       <h1>React Test</h1>
-      <Link to="/main">メインリンク</Link>
-      <Save />
+      <Link to="/">indexへ</Link>
     </div>
   );
 };
 
-export default App;
+export default Main;
