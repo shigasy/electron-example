@@ -3,6 +3,7 @@ import { app, BrowserWindow } from 'electron';
 import path from 'path';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import hotReload from 'electron-reloader';
+import core from './core/core';
 
 hotReload(module);
 // セキュアな Electron の構成

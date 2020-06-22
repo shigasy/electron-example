@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import '../types/core';
 
 const Save: React.FC = () => {
@@ -22,6 +22,18 @@ const Save: React.FC = () => {
     },
     [body]
   );
+  useEffect(() => {
+    const f = async () => {
+      const res = await window.core.initialOpenFile(
+        '/Users/shiga/src/github.com/shigasy/electron-example/data/test.txt'
+      );
+      if (res === null) {
+        return;
+      }
+      setBody(res);
+    };
+    f();
+  }, []);
   return (
     <div>
       <textarea value={body} onChange={onBodyChange} />

@@ -76,9 +76,19 @@ const openFile = async (): Promise<string | null> => {
   return null;
 };
 
+const initialOpenFile = async (path: string): Promise<string | null> => {
+  const fileBody = await readFile(path).catch((err) => {
+    alert('file open error');
+    console.log(err);
+    return null;
+  });
+  return fileBody;
+};
+
 const core = {
   saveText,
   openFile,
+  initialOpenFile,
 };
 
 export default core;
