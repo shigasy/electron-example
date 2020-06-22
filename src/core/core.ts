@@ -1,3 +1,5 @@
+import fs from 'fs';
+
 const { BrowserWindow, dialog } = require('electron').remote;
 
 // import os from 'os';
@@ -5,9 +7,30 @@ const { BrowserWindow, dialog } = require('electron').remote;
 
 // const dataFilePath = path.join(os.homedir(), '/electron/todo.json');
 
-const saveText = (): any => {
+const saveText = async (body: string): Promise<void> => {
   const win = BrowserWindow.getFocusedWindow();
-  console.log(win);
+  if (win === null) {
+    alert('save error');
+    return;
+  }
+  const res = await dialog.showSaveDialog(win, {
+    title: 'text',
+    message: 'message',
+    filters: [
+      {
+        name: 'Document',
+        extensions: ['txt'],
+      },
+    ],
+  });
+  if (res.filePath) {
+    fs.writeFile(res.filePath, body, (error: any) => {
+      if (error != null) {
+        alert('save error');
+      }
+    });
+  }
+  console.log(res.filePath);
 };
 
 const core = {

@@ -1,5 +1,5 @@
 export default interface Core {
-  saveText: () => any;
+  saveText: (body: string) => Promise<void>;
 }
 
 // windowオブジェクトにcoreの定義を追加する

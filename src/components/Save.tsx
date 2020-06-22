@@ -3,7 +3,7 @@ import '../types/core';
 
 const Save: React.FC = () => {
   const onSaveClick = () => {
-    window.core.saveText();
+    window.core.saveText('test');
     console.log('save');
   };
   return (
