@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, globalShortcut } from 'electron';
 import path from 'path';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import hotReload from 'electron-reloader';
-import core from './core/core';
 
 hotReload(module);
 // セキュアな Electron の構成
@@ -30,13 +29,29 @@ const createWindow = () => {
 
   // 開発者ツールを起動する
   win.webContents.openDevTools();
+  return win;
 };
 
 // Electronの起動準備が終わったら、ウィンドウを作成する。
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  const win = createWindow();
+  const ret = globalShortcut.register('CommandOrControl+X', () => {
+    console.log('CommandOrControl+X is pressed');
+    win.show();
+  });
+
+  if (!ret) {
+    console.log('registration failed');
+  }
+
+  // Check whether a shortcut is registered.
+  console.log(globalShortcut.isRegistered('CommandOrControl+X'));
+});
 
 // すべての ウィンドウ が閉じたときの処理
 app.on('window-all-closed', () => {
+  globalShortcut.unregisterAll();
+
   // macOS 以外では、メインプロセスを停止する
   // macOS では、ウインドウが閉じてもメインプロセスは停止せず
   // ドックから再度ウインドウが表示されるようにする。
