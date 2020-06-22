@@ -30,7 +30,6 @@ const saveText = async (body: string): Promise<void> => {
       }
     });
   }
-  console.log(res.filePath);
 };
 
 const readFile = (path: string): Promise<string> => {
@@ -45,6 +44,7 @@ const readFile = (path: string): Promise<string> => {
   });
 };
 
+// 読み込まなかった場合と空文字を判定するためにnullにした
 const openFile = async (): Promise<string | null> => {
   const win = BrowserWindow.getFocusedWindow();
   if (win === null) {

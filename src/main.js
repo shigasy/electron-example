@@ -1,5 +1,10 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import hotReload from 'electron-reloader';
+
+hotReload(module);
 // セキュアな Electron の構成
 // 参考: https://qiita.com/pochman/items/64b34e9827866664d436
 
