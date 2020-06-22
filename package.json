@@ -9,7 +9,11 @@
     "start": "electron ./dist/main.js",
     "build": "yarn build:main & yarn build:render",
     "build:main": "tsc",
-    "build:render": "webpack"
+    "build:render": "webpack",
+    "dev": "yarn run dev:ts & yarn run dev:webpack",
+    "dev:ts": "tsc -w",
+    "dev:webpack": "webpack -w",
+    "dev:renderer": "tsc -w & webpack -w"
   },
   "dependencies": {
     "electron": "^8.2.5",

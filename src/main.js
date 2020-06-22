@@ -18,7 +18,6 @@ const createWindow = () => {
       preload: path.join(__dirname, './core/preLoad.js'), // preLoad.js にビジネスロジックを記述する
     },
   });
-
   // 読み込む index.html。
   // tsc でコンパイルするので、出力先の dist の相対パスで指定する。
   win.loadFile('./index.html');
