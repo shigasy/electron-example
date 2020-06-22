@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-// import '../types/core';
+import '../types/core';
 
 const Save: React.FC = () => {
   const [body, setBody] = useState('');
@@ -7,9 +7,12 @@ const Save: React.FC = () => {
     window.core.saveText(body);
     console.log('save');
   };
-  const onLoadClick = () => {
-    // window.core.saveText('test');
-    console.log('load');
+  const onLoadClick = async () => {
+    const res = await window.core.openFile();
+    if (res === null) {
+      return;
+    }
+    setBody(res);
   };
 
   const onBodyChange = useCallback(
@@ -21,7 +24,7 @@ const Save: React.FC = () => {
   );
   return (
     <div>
-      <textarea onChange={onBodyChange} />
+      <textarea value={body} onChange={onBodyChange} />
       <button type="button" onClick={onSaveClick}>
         Save
       </button>
