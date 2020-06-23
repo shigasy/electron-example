@@ -37,10 +37,6 @@ const createWindow = () => {
 
 let isOpen = true;
 
-const closeMainWindow = () => {
-  isOpen = false;
-};
-
 const createMainWindow = () => {
   const main = new BrowserWindow({
     width: 600,
@@ -49,7 +45,6 @@ const createMainWindow = () => {
     resizable: false, // ウィンドウのリサイズを禁止
     show: false,
     alwaysOnTop: true,
-    hasShadow: false,
     webPreferences: {
       // レンダラープロセスで Node.js 使えないようにする (XSS対策)
       nodeIntegration: false,
@@ -63,7 +58,6 @@ const createMainWindow = () => {
   main.setVisibleOnAllWorkspaces(true);
 
   main.setAlwaysOnTop(true, 'screen-saver', 1);
-  main.on('closed', closeMainWindow);
 
   // main.setVisibleOnAllWorkspaces(true);
   main.loadURL(
@@ -79,22 +73,19 @@ const createMainWindow = () => {
 
 // --------------
 
-const openMainWindow = () => {
-  closeMainWindow();
-  createMainWindow();
-  isOpen = true;
-};
-
 const isMainWindowOpen = () => isOpen;
-
-const hideMainWindow = (main) => {
-  main.hide();
-  app.dock.show();
-};
 
 const showMainWindow = (main) => {
   app.dock.hide();
   main.show();
+  isOpen = true;
+};
+const hideMainWindow = (main) => {
+  main.hide();
+  isOpen = false;
+  // 連続でキーを押すと、docのモノが消えずにこれが何度も発生してしまう
+  // dockに表示されないので、使わないほうが後ろで常駐してる感じで良さそう
+  // app.dock.show();
 };
 
 // Electronの起動準備が終わったら、ウィンドウを作成する。
@@ -102,12 +93,16 @@ app.whenReady().then(() => {
   const main = createMainWindow();
 
   if (!main.isVisible()) {
-    showMainWindow(main);
+    // showMainWindow(main);
   }
 
   // const win = createWindow();
 
   // const main = createMainWindow();
+
+  // ===========================
+  // key
+  // ============================
   const hideAndShowKey = globalShortcut.register('alt+space', () => {
     console.log('CommandOrControl+L is pressed');
     if (isOpen) {
@@ -115,12 +110,10 @@ app.whenReady().then(() => {
     } else {
       showMainWindow(main);
     }
-    isOpen = !isOpen;
   });
   const hideKey = localShortcut.register('esc', () => {
     console.log('CommandOrControl+L is pressed');
     hideMainWindow(main);
-    isOpen = false;
   });
 
   if (!hideAndShowKey) {
@@ -129,9 +122,15 @@ app.whenReady().then(() => {
 
   // Check whether a shortcut is registered.
   console.log(globalShortcut.isRegistered('CommandOrControl+L'));
-});
+  // ===========================
 
-app.on('before-quit', closeMainWindow);
+  // アプリケーションを移動すると、一瞬ちらつくため、
+  // TODO: 移動する前にhideする
+  main.on('blur', () => {
+    hideMainWindow(main);
+    console.log('blur');
+  });
+});
 
 // すべての ウィンドウ が閉じたときの処理
 app.on('window-all-closed', () => {

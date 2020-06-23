@@ -1,0 +1,20 @@
+html {
+  margin: 0;
+  background-color: #111;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.main {
+  background-color: #111;
+  width: 100vw;
+  height: 100vh;
+}
+.title {
+  color: white;
+}
