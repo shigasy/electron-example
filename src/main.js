@@ -2,6 +2,7 @@
 import { app, BrowserWindow, globalShortcut } from 'electron';
 import path from 'path';
 import url from 'url';
+import localShortcut from 'electron-localshortcut';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import hotReload from 'electron-reloader';
@@ -86,59 +87,48 @@ const openMainWindow = () => {
 
 const isMainWindowOpen = () => isOpen;
 
+const hideMainWindow = (main) => {
+  main.hide();
+  app.dock.show();
+};
+
+const showMainWindow = (main) => {
+  app.dock.hide();
+  main.show();
+};
+
 // Electronの起動準備が終わったら、ウィンドウを作成する。
 app.whenReady().then(() => {
   const main = createMainWindow();
 
   if (!main.isVisible()) {
-    app.dock.hide();
-    main.showInactive();
-
-    // And also hide it after a while
-    setTimeout(() => {
-      main.hide();
-      app.dock.show();
-    }, 1000);
+    showMainWindow(main);
   }
 
   // const win = createWindow();
-  // app.dock.hide();
 
   // const main = createMainWindow();
-  const ret = globalShortcut.register('CommandOrControl+X', () => {
-    console.log('CommandOrControl+X is pressed');
+  const hideAndShowKey = globalShortcut.register('alt+space', () => {
+    console.log('CommandOrControl+L is pressed');
     if (isOpen) {
-      main.hide();
-      app.dock.show();
+      hideMainWindow(main);
     } else {
-      app.dock.hide();
-      main.showInactive();
+      showMainWindow(main);
     }
     isOpen = !isOpen;
-
-    // if (isMainWindowOpen()) {
-    //   closeMainWindow();
-    //   // hides the dock icon for our app which allows our windows to join other
-    //   // apps' spaces. without this our windows open on the nearest "desktop" space
-    //   // main.setAlwaysOnTop(true, 'floating');
-    //   // main.setVisibleOnAllWorkspaces(true);
-    //   // main.setFullScreenable(false);
-
-    //   // app.dock.show();
-    //   console.log('close');
-    // } else {
-    //   app.dock.show();
-
-    //   openMainWindow();
-    // }
+  });
+  const hideKey = localShortcut.register('esc', () => {
+    console.log('CommandOrControl+L is pressed');
+    hideMainWindow(main);
+    isOpen = false;
   });
 
-  if (!ret) {
+  if (!hideAndShowKey) {
     console.log('registration failed');
   }
 
   // Check whether a shortcut is registered.
-  console.log(globalShortcut.isRegistered('CommandOrControl+X'));
+  console.log(globalShortcut.isRegistered('CommandOrControl+L'));
 });
 
 app.on('before-quit', closeMainWindow);
