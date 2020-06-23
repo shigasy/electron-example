@@ -1,7 +1,8 @@
 import fs from 'fs';
+import robot from 'robotjs';
 
+console.log(robot);
 const { BrowserWindow, dialog } = require('electron').remote;
-
 // import os from 'os';
 // import path from 'path';
 
@@ -85,10 +86,38 @@ const initialOpenFile = async (path: string): Promise<string | null> => {
   return fileBody;
 };
 
+const sendKeyTest = (): void => {
+  // robot.typeString('Hello World');
+  // robot.keyTap('enter');
+  const win = BrowserWindow.getFocusedWindow();
+  if (win) {
+    win.hide();
+  }
+
+  robot.keyTap('space', ['command']);
+
+  // console.log(robot.keyTap('space', ['command']));
+};
+
+const sendSineWave = (): void => {
+  // Speed up the mouse.
+  // robot.setMouseDelay(2);
+  // const twoPI = Math.PI * 2.0;
+  // const screenSize = robot.getScreenSize();
+  // const height = screenSize.height / 2 - 10;
+  // const { width } = screenSize;
+  // for (let x = 0; x < width; x + 1) {
+  //   const y = height * Math.sin((twoPI * x) / width) + height;
+  //   robot.moveMouse(x, y);
+  // }
+};
+
 const core = {
   saveText,
   openFile,
   initialOpenFile,
+  sendKeyTest,
+  sendSineWave,
 };
 
 export default core;
